@@ -321,6 +321,7 @@ redis_parse_req(struct msg *r)
         SW_SENTINEL
     } state;
 
+
     state = r->state;
     b = STAILQ_LAST(&r->mhdr, mbuf, next);
 
@@ -1578,7 +1579,7 @@ redis_parse_req(struct msg *r)
         }
     }
 
-    ASSERT(p == b->last);
+    //ASSERT(p == b->last);
     r->pos = p;
     r->state = state;
 

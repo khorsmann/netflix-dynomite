@@ -77,7 +77,7 @@ dyn_parse_core(struct msg *r)
 		ch = *p;
 		switch (state) {
 		case DYN_START:
-			//log_debug(LOG_DEBUG, "DYN_START");
+			log_debug(LOG_DEBUG, "DYN_START");
 			if (ch == ' ') {
 				break;
 			} else if (isdigit(ch)) {
@@ -118,8 +118,8 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_MSG_ID:
-			log_debug(LOG_DEBUG, "DYN_MSG_ID");
-			log_debug(LOG_DEBUG, "num = %d", num);
+			//log_debug(LOG_DEBUG, "DYN_MSG_ID");
+			//log_debug(LOG_DEBUG, "num = %d", num);
 			if (isdigit(ch))  {
 				num = num*10 + (ch - '0');
 			} else if (ch != ' ') {
@@ -127,7 +127,7 @@ dyn_parse_core(struct msg *r)
 			} else {
 
 				//if (num >= 0) {
-				//log_debug(LOG_DEBUG, "MSG ID : %d", num);
+				log_debug(LOG_DEBUG, "MSG ID : %d", num);
 				dmsg->id = num;
 				state = DYN_SPACES_BEFORE_TYPE_ID;
 				//} else {
@@ -137,7 +137,7 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_SPACES_BEFORE_TYPE_ID:
-			log_debug(LOG_DEBUG, "DYN_SPACES_BEFORE_TYPE_ID");
+			//log_debug(LOG_DEBUG, "DYN_SPACES_BEFORE_TYPE_ID");
 			if (ch == ' ') {
 				break;
 			} else if (isdigit(ch)) {
@@ -150,8 +150,7 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_TYPE_ID:
-			log_debug(LOG_DEBUG, "DYN_TYPE_ID");
-			log_debug(LOG_DEBUG, "num = %d", num);
+			log_debug(LOG_DEBUG, "DYN_TYPE_ID: num = %d", num);
 			if (isdigit(ch))  {
 				num = num*10 + (ch - '0');
 			} else {
@@ -179,8 +178,8 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_BIT_FIELD:
-			log_debug(LOG_DEBUG, "DYN_BIT_FIELD");
-			log_debug(LOG_DEBUG, "num = %d", num);
+			//log_debug(LOG_DEBUG, "DYN_BIT_FIELD");
+			//log_debug(LOG_DEBUG, "num = %d", num);
 			if (isdigit(ch))  {
 				num = num*10 + (ch - '0');
 			} else {
@@ -199,7 +198,7 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_SPACES_BEFORE_VERSION:
-			log_debug(LOG_DEBUG, "DYN_SPACES_BEFORE_VERSION");
+			//log_debug(LOG_DEBUG, "DYN_SPACES_BEFORE_VERSION");
 			if (ch == ' ') {
 				break;
 			} else if (isdigit(ch)) {
@@ -212,13 +211,12 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_VERSION:
-			log_debug(LOG_DEBUG, "DYN_VERSION");
-			log_debug(LOG_DEBUG, "num = %d", num);
+			//log_debug(LOG_DEBUG, "DYN_VERSION: num = %d", num);
 			if (isdigit(ch))  {
 				num = num*10 + (ch - '0');
 			} else {
 				if (ch == ' ')  {
-					//log_debug(LOG_DEBUG, "VERSION : %d", num);
+					log_debug(LOG_DEBUG, "VERSION : %d", num);
 					dmsg->version = num;
 					state = DYN_SPACES_BEFORE_STAR;
 				} else {
@@ -239,26 +237,11 @@ dyn_parse_core(struct msg *r)
 				goto error;
 			}
 
-			//else {
-			//	state = DYN_STAR;
-			//}
-
 			break;
 
-		//case DYN_STAR:
-			//log_debug(LOG_DEBUG, "DYN_STAR");
-		//	if (ch == '*') {
-		//		state = DYN_DATA_LEN;
-		//		num = 0;
-		//	} else {
-		//		goto error;
-		//	}
-
-		//	break;
-
 		case DYN_DATA_LEN:
-			log_debug(LOG_DEBUG, "DYN_DATA_LEN");
-			log_debug(LOG_DEBUG, "num = %d", num);
+			//log_debug(LOG_DEBUG, "DYN_DATA_LEN");
+			//log_debug(LOG_DEBUG, "num = %d", num);
 			if (isdigit(ch))  {
 				num = num*10 + (ch - '0');
 			} else {
@@ -274,12 +257,12 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_SPACE_BEFORE_DATA:
-			log_debug(LOG_DEBUG, "DYN_SPACE_BEFORE_DATA");
+			//log_debug(LOG_DEBUG, "DYN_SPACE_BEFORE_DATA");
 			state = DYN_DATA;
 			break;
 
 		case DYN_DATA:
-			log_debug(LOG_DEBUG, "DYN_DATA");
+			//log_debug(LOG_DEBUG, "DYN_DATA");
 			p -= 1;
 			if (dmsg->mlen > 0)  {
 				dmsg->data = p;
@@ -292,7 +275,7 @@ dyn_parse_core(struct msg *r)
 			break;
 
 		case DYN_SPACES_BEFORE_PAYLOAD_LEN: //this only need in dynomite's custome msg
-			log_debug(LOG_DEBUG, "DYN_SPACES_BEFORE_PAYLOAD_LEN");
+			//log_debug(LOG_DEBUG, "DYN_SPACES_BEFORE_PAYLOAD_LEN");
 			if (ch == ' ') {
 				break;
 			} else if (ch == '*') {
@@ -435,25 +418,26 @@ dyn_parse_req(struct msg *r)
 			}
 
 		    if (TRACING_LEVEL == LOG_VVERB) {
-			    log_debug(LOG_VVERB, "data or encrypted aes key length : %d", dmsg->plen);
+			    log_debug(LOG_VVERB, "data or encrypted aes key length : %d", dmsg->mlen);
             }
 
 
 			if (dmsg->mlen > 1) {
 			    if (TRACING_LEVEL == LOG_VVERB) {
-				   log_debug(LOG_VVERB, "dmsg->mlen is something: %d, need to process it", dmsg->plen);
+				   log_debug(LOG_VVERB, "dmsg->mlen is something: %d, need to process it", dmsg->mlen);
                 }
 				//Decrypt AES key
 				dyn_rsa_decrypt(dmsg->data, aes_decrypted_buf);
 				strncpy(r->owner->aes_key, aes_decrypted_buf, strlen(aes_decrypted_buf));
-				//Decrypt payload
-				dyn_aes_decrypt(dmsg->payload, dmsg->plen, decrypted_buf, aes_decrypted_buf);
+
 			} else {
 			    if (TRACING_LEVEL == LOG_VVERB) {
-				   log_debug(LOG_VVERB, "dmsg->mlen is a dummy: %d, NO need to process it", dmsg->plen);
+				   log_debug(LOG_VVERB, "dmsg->mlen is a dummy: %d, NO need to process it", dmsg->mlen);
                 }
-				dyn_aes_decrypt(dmsg->payload, dmsg->plen, decrypted_buf, r->owner->aes_key);
 			}
+
+			//Decrypt payload
+			dyn_aes_decrypt(dmsg->payload, dmsg->plen, decrypted_buf, r->owner->aes_key);
 
 
 		    if (TRACING_LEVEL == LOG_VVERB) {
@@ -462,13 +446,13 @@ dyn_parse_req(struct msg *r)
             }
 
 			struct mbuf *b = STAILQ_LAST(&r->mhdr, mbuf, next);
-			b->last = b->pos;
+			//b->last = b->pos;
+			b->pos = b->pos + dmsg->plen;
 			r->pos = decrypted_buf->start;
 			mbuf_insert(&r->mhdr, decrypted_buf);
 
-			//reset these variables
-			dmsg->payload = decrypted_buf->start;
-			dmsg->plen = mbuf_length(decrypted_buf);
+			//log_hexdump(LOG_VERB, decrypted_buf->pos, mbuf_length(decrypted_buf), "decrypted_buf :::: ");
+
 		}
 
 		if (done_parsing)
@@ -520,7 +504,7 @@ void dyn_parse_rsp(struct msg *r)
 			   loga("AES encryption key from conn: %s\n", base64_encode(r->owner->aes_key, AES_KEYLEN));
             }
 
-                        //Dont need to decrypt AES key - pull it out from the conn
+            //Dont need to decrypt AES key - pull it out from the conn
 			dyn_aes_decrypt(dmsg->payload, dmsg->plen, decrypted_buf, r->owner->aes_key);
 
 			if (TRACING_LEVEL == LOG_VVERB) {
@@ -528,7 +512,8 @@ void dyn_parse_rsp(struct msg *r)
             }
 
 			struct mbuf *b = STAILQ_LAST(&r->mhdr, mbuf, next);
-			b->last = b->pos;
+			//b->last = b->pos;
+			b->pos = b->pos + dmsg->plen;
 			r->pos = decrypted_buf->start;
 			mbuf_insert(&r->mhdr, decrypted_buf);
 		}
@@ -577,7 +562,7 @@ dmsg_dump(struct dmsg *dmsg)
 {
     struct mbuf *mbuf;
 
-    if (TRACING_LEVEL == LOG_VVERB) {
+    if (TRACING_LEVEL >= LOG_VVERB) {
        log_debug(LOG_VVERB, "dmsg dump: id %"PRIu64" version %d  bit_field %d type %d len %"PRIu32"  plen %"PRIu32" ",
     	   	    dmsg->id, dmsg->version, dmsg->bit_field, dmsg->type, dmsg->mlen, dmsg->plen);
     }
@@ -664,6 +649,9 @@ dmsg_write(struct mbuf *mbuf, uint64_t msg_id, uint8_t type,
 		   struct conn *conn, uint32_t payload_len)
 {
 
+	mbuf_write_char(mbuf, ' ');
+	mbuf_write_char(mbuf, ' ');
+	mbuf_write_char(mbuf, ' ');
     mbuf_write_string(mbuf, &MAGIC_STR);
     mbuf_write_uint64(mbuf, msg_id);
 
@@ -723,6 +711,9 @@ dmsg_write(struct mbuf *mbuf, uint64_t msg_id, uint8_t type,
 rstatus_t
 dmsg_write_mbuf(struct mbuf *mbuf, uint64_t msg_id, uint8_t type, struct conn *conn, uint32_t plen)
 {
+	mbuf_write_char(mbuf, ' ');
+	mbuf_write_char(mbuf, ' ');
+	mbuf_write_char(mbuf, ' ');
     mbuf_write_string(mbuf, &MAGIC_STR);
     mbuf_write_uint64(mbuf, msg_id);
     mbuf_write_char(mbuf, ' ');

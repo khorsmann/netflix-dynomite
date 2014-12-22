@@ -194,7 +194,12 @@ mbuf_insert_head(struct mhdr *mhdr, struct mbuf *mbuf)
     log_debug(LOG_VVERB, "insert head mbuf %p len %d", mbuf, mbuf->last - mbuf->pos);
 }
 
-
+void
+mbuf_insert_after(struct mhdr *mhdr, struct mbuf *mbuf, struct mbuf *nbuf)
+{
+    STAILQ_INSERT_AFTER(mhdr, nbuf, mbuf, next);
+    //log_debug(LOG_VVERB, "insert head mbuf %p len %d", mbuf, mbuf->last - mbuf->pos);
+}
 
 /*
  * Remove mbuf from the mhdr Q
@@ -246,7 +251,18 @@ mbuf_split(struct mhdr *h, uint8_t *pos, mbuf_copy_t cb, void *cbarg)
 
     ASSERT(!STAILQ_EMPTY(h));
 
+    //nbuf = STAILQ_FIRST(h);
+    //mbuf = STAILQ_LAST(h, mbuf, next);
+
+    nbuf = STAILQ_FIRST(h);
     mbuf = STAILQ_LAST(h, mbuf, next);
+
+    if (nbuf != mbuf) {
+    	//encryption case with 2 buffers
+    	mbuf_remove(h, nbuf);
+    	return nbuf;
+    }
+
     ASSERT(pos >= mbuf->pos && pos <= mbuf->last);
 
     nbuf = mbuf_get();
